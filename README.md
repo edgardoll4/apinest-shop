@@ -14,12 +14,29 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## Clonar repositorio
+
+```bash
+$ git clone https://github.com/edgardoll4/apinest-shop.git
+```
+## Installacion de dependencias
 
 ```bash
 $ npm install
 ```
+## Configurar variables de entorno
 
+```Dupilcar el archivo
+  .env.templete
+```
+```Renombrar el archivo y configurar losvalores
+  .env
+```
+## Levantar la base de datos en Docker
+
+```bash
+$ docker-comnpose up -d
+```
 ## Running the app
 
 ```bash
@@ -32,5 +49,6 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
 
 Nest is [MIT licensed](LICENSE).
