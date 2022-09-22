@@ -26,10 +26,12 @@ $ npm install
 ```
 ## Configurar variables de entorno
 
-```Dupilcar el archivo
+```bash
+# Dupilcar el archivo
   .env.templete
 ```
-```Renombrar el archivo y configurar losvalores
+```bash
+# Renombrar el archivo y configurar losvalores
   .env
 ```
 ## Levantar la base de datos en Docker
