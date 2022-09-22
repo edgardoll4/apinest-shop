@@ -3,11 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({ // configuracion de la conexion a la DB con las variables de entorno 
       type: 'postgres',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
@@ -16,7 +17,8 @@ import { AppService } from './app.service';
       password: process.env.DB_PASSWORD,
       autoLoadEntities: true,
       synchronize: true,
-    })
+    }),
+    ProductsModule
   ],
   controllers: [AppController],
   providers: [AppService],
