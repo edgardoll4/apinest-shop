@@ -30,7 +30,10 @@ export class CreateProductDto {
     @IsArray()
     sizes: string[]; // ValidSizes[];
     // images: string[];
-    // tags: string[];
+    @IsString({each: true})
+    @IsArray()
+    @IsOptional()
+    tags: string[];
     // type: ValidTypes;
 
 }
