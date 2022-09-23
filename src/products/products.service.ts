@@ -1,3 +1,4 @@
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm'
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
@@ -5,6 +6,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Repository } from 'typeorm';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { NotFoundException } from '@nestjs/common';
+import { validate as isUUID} from 'uuid';
 
 @Injectable()
 export class ProductsService {
@@ -20,6 +23,19 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto) {
 
     try{
+
+      // if (!createProductDto.slug){
+      //   createProductDto.slug = createProductDto.title
+      //   .toLowerCase()
+      //   .replaceAll(' ','_')
+      //   .replaceAll("'",'')
+      // }else{
+      //   createProductDto.slug = createProductDto.slug
+      //   .toLowerCase()
+      //   .replaceAll(' ','_')
+      //   .replaceAll("'",'')
+      // }
+
       const product = this.productRepository.create(createProductDto);
       await this.productRepository.save(product);
       return product;
@@ -30,26 +46,55 @@ export class ProductsService {
     }
     
   }
+  // TODO: paginar
+  findAll(paginationDto:PaginationDto) {
+    const { limit = 10, offset = 5} =paginationDto;
+    return this.productRepository.find({
+      take: limit,
+      skip: offset,
+      // TODO: relaciones
 
-  findAll() {
-    return `This action returns all products`;
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(term: string) {
+    // const product = await this.productRepository.findOneBy({term});
+    let product: Product;
+
+    if ( isUUID(term) )
+      product = await this.productRepository.findOneBy({id: term});
+    else{
+      // product = await this.productRepository.findOneBy({slug: term});
+      const queryBuilder = this.productRepository.createQueryBuilder();
+      product = await queryBuilder
+        .where(`UPPER(title) =:title or slug =:slug`,{
+          title: term.toUpperCase(),
+          slug: term.toLowerCase()
+        }).getOne();
+    }
+    
+    if(!product)
+      if (isUUID(term))
+        throw new NotFoundException(`El producto con el id: '${term}' no se encuentra`);
+      else
+        throw new NotFoundException(`El producto con el slug: '${term}' no se encuentra`);
+
+    return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
+  update(id: string, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const product = await this.findOne(id);
+    await this.productRepository.remove(product);
+    return product;
   }
 
   private handleDBExceptions(error: any) {
     this.logger.error(error) //uso del logger para mostrar erro por consola
-    const msn = `Error '${error.code}' => ${error.detail}`; // Uso de un mensaje personalizado con los datos del objeto error
+    const msn = `Error: '${error.code}' => ${error.detail}`; // Uso de un mensaje personalizado con los datos del objeto error
     throw new BadRequestException(msn)
 
     // throw new InternalServerErrorException('Ayuda!')
