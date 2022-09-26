@@ -9,6 +9,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   providers: [ProductsService],
   imports: [
     TypeOrmModule.forFeature([Product, ProductImagen]) // toma los entity 
+  ],
+  exports: [
+    ProductsService,
+    TypeOrmModule
   ]
 })
 export class ProductsModule {}
