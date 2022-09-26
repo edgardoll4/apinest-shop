@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Product } from "./";
 
-@Entity()
+@Entity( { name: 'product_images' } ) // Se determina el nombre que tendra la tabla
 export class ProductImagen {
     @PrimaryGeneratedColumn()
     id: number;
