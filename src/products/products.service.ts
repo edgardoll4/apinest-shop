@@ -51,14 +51,28 @@ export class ProductsService {
     
   }
   // TODO: paginar
-  findAll(paginationDto:PaginationDto) {
+  async findAll(paginationDto:PaginationDto) {
     const { limit = 10, offset = 5} =paginationDto;
-    return this.productRepository.find({
+    const products = await this.productRepository.find({
       take: limit,
       skip: offset,
+      relations:{
+        images: true, // permite traer los datos de la imagenes a traves de la relaciones
+      }
       // TODO: relaciones
 
-    });
+    })
+
+    return products.map ( products => ({
+      ...products,
+      images:products.images.map(img => img.url) // permite mostrar solo los datos que se requieren
+    }) )
+
+    // return products.map ( {imagens, ...rest} => ({
+    //   ...rest,
+    //   images: images.map(img => img.url) // permite mostrar solo los datos que se requieren
+    // }) )
+
   }
 
   async findOne(term: string) {
@@ -69,12 +83,14 @@ export class ProductsService {
       product = await this.productRepository.findOneBy({id: term});
     else{
       // product = await this.productRepository.findOneBy({slug: term});
-      const queryBuilder = this.productRepository.createQueryBuilder();
+      const queryBuilder = this.productRepository.createQueryBuilder('prod');
       product = await queryBuilder
         .where(`UPPER(title) =:title or slug =:slug`,{
           title: term.toUpperCase(),
           slug: term.toLowerCase()
-        }).getOne();
+        })
+        .leftJoinAndSelect('prod.images','prodImg') // permite mostrar solo los datos que se requieren
+        .getOne();
     }
     
     if(!product)
@@ -84,6 +100,14 @@ export class ProductsService {
         throw new NotFoundException(`El producto con el slug: '${term}' no se encuentra`);
 
     return product;
+  }
+
+  async findOnePlain (term: string){  // funcion para aplanar los datos de las imagenes solo la url
+    const {images = [], ...rest} = await this.findOne (term);
+    return{
+      ...rest,
+      images: images.map(images => images.url)
+    }
   }
 
   async update(id: string, updateProductDto: UpdateProductDto) {
