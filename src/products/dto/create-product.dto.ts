@@ -29,11 +29,15 @@ export class CreateProductDto {
     @IsString({each: true})
     @IsArray()
     sizes: string[]; // ValidSizes[];
-    // images: string[];
+
     @IsString({each: true})
     @IsArray()
     @IsOptional()
     tags: string[];
     // type: ValidTypes;
 
+    @IsString({each: true})
+    @IsArray()
+    @IsOptional()
+    images: string[];
 }

@@ -37,7 +37,7 @@ $ npm install
 ## Levantar la base de datos en Docker
 
 ```bash
-$ docker-comnpose up -d
+$ docker-compose up -d
 ```
 ## Running the app
 

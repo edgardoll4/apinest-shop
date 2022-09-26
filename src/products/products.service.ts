@@ -1,5 +1,4 @@
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm'
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -8,6 +7,7 @@ import { Repository } from 'typeorm';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { NotFoundException } from '@nestjs/common';
 import { validate as isUUID} from 'uuid';
+import { ProductImagen, Product} from './entities';
 
 @Injectable()
 export class ProductsService {
@@ -16,8 +16,9 @@ export class ProductsService {
 
   constructor(
     @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>
-
+    private readonly productRepository: Repository<Product>,
+    @InjectRepository(ProductImagen)
+    private readonly productImagenRepository: Repository<ProductImagen>
   ){}
 
   async create(createProductDto: CreateProductDto) {
@@ -35,10 +36,13 @@ export class ProductsService {
       //   .replaceAll(' ','_')
       //   .replaceAll("'",'')
       // }
-
-      const product = this.productRepository.create(createProductDto);
+      const {images =[], ...prodctDetails}=createProductDto;
+      const product = this.productRepository.create({
+        ...prodctDetails,
+        images: images.map(image => this.productImagenRepository.create({url: image})) // permite guardar el arreglo de imagenes en la product-imagen con id del producto
+      });
       await this.productRepository.save(product);
-      return product;
+      return {...product, images};
     } catch(error){
       
       this.handleDBExceptions (error);
@@ -86,7 +90,8 @@ export class ProductsService {
 
     const product = await this.productRepository.preload({
       id: id,
-      ...updateProductDto
+      ...updateProductDto,
+      images: []
     });
 
     if(!product) 
