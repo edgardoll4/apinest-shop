@@ -173,6 +173,19 @@ export class ProductsService {
 
     // throw new InternalServerErrorException('Ayuda!')
   }
+
+ async deleteAllProducts() {  // Eliminacion completa de los productos
+  const query = this.productRepository.createQueryBuilder('product');
+  try {
+    return await query
+    .delete()
+    .where({})
+    .execute();
+  } catch (error) {
+    this.handleDBExceptions(error);
+  }
+ }
+
 }
 
 
