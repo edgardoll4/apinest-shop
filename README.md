@@ -51,6 +51,10 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+## Cargar datos de prueba a la DataBase
 
+```bash
+$ http://localhost:300/api/seed
+```
 
 Nest is [MIT licensed](LICENSE).
