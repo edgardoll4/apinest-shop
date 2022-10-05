@@ -19,6 +19,12 @@
 ```bash
 $ git clone https://github.com/edgardoll4/apinest-shop.git
 ```
+
+## Ir al directorio donde se clono el repositorio
+
+```bash
+$ cd apinest-shop
+```
 ## Installacion de dependencias
 
 ```bash

@@ -52,7 +52,7 @@ export class FilesController {
     }
     console.log({ fileInController: file });
 
-    const secureUrl = `${this.configService.get( 'SERV_HOST' )}:${this.configService.get( 'SERV_PORT' )}/api/files/product/${file.filename}`;
+    const secureUrl = `${this.configService.get( 'SERV_HOST' )}:${this.configService.get( 'SERV_PORT' )}/api/files/product/${file.filename}`; //url de la imagen en carpeta public 
 
     return {
       secureUrl

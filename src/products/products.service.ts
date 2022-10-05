@@ -166,13 +166,7 @@ export class ProductsService {
     return product;
   }
 
-  private handleDBExceptions(error: any) {
-    this.logger.error(error) //uso del logger para mostrar erro por consola
-    const msn = `Error: '${error.code}' => ${error.detail}`; // Uso de un mensaje personalizado con los datos del objeto error
-    throw new BadRequestException(msn)
-
-    // throw new InternalServerErrorException('Ayuda!')
-  }
+  
 
  async deleteAllProducts() {  // Eliminacion completa de los productos
   const query = this.productRepository.createQueryBuilder('product');
@@ -186,6 +180,14 @@ export class ProductsService {
   }
  }
 
+
+  private handleDBExceptions(error: any):never {
+    this.logger.error(error) //uso del logger para mostrar erro por consola
+    const msn = `Error: '${error.code}' => ${error.detail}`; // Uso de un mensaje personalizado con los datos del objeto error
+    throw new BadRequestException(msn)
+
+    // throw new InternalServerErrorException('Ayuda!')
+  }
 }
 
 
