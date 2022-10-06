@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -45,4 +45,23 @@ export class User {
         default:['user']
     })
     roles: string[];
+
+
+    @BeforeInsert()
+    checkFilesBeforeInsert(){
+        this.email=this.email
+            .toLowerCase()  // Pasa todas las letras a minuscula
+            .trim(); // Limpia los espacios al principio y al final
+    }
+
+   @BeforeUpdate()
+   checkFilesBeforeUpdate(){
+       this.checkFilesBeforeInsert()
+
+   }
+    // checkFilesBeforeUpdate(){        
+    //     this.email=this.email
+    //         .toLowerCase()
+    //         .trim();
+    
 }

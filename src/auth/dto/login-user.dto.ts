@@ -8,7 +8,7 @@ export class LoginUserDto {
     // email: string;
 
     @IsString()
-    @MinLength(6)
+    @MinLength(2)
     username: string;
 
     // @IsString()

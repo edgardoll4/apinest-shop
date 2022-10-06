@@ -1,10 +1,12 @@
 import { BadRequestException,  Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { CreateUserDto, LoginUserDto } from './dto';
 import { User } from './entities';
+import { IJwtPayLoad } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +17,8 @@ export class AuthService {
   constructor(
 
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService
   ){}
 
 
@@ -24,15 +27,22 @@ export class AuthService {
     try {
 
       const {password, ...userData} = createUserDto;
+
       const user = this.userRepository.create(
         {
           ...userData,
           password: bcrypt.hashSync(password,10)
         }
       );
+
       await this.userRepository.save(user)
+
       delete user.password; // Eliminar el password para luego enviar el return
-      return user;
+
+      return{ 
+        ...user,
+        token: this.getJwtToken({username: user.username})
+      };
       // TODO: retornar el JWT de acceso
 
     } catch (error) {
@@ -42,7 +52,7 @@ export class AuthService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto){
+  async login(loginUserDto: LoginUserDto): Promise<any>{
 
     const { username, password } = loginUserDto;
 
@@ -62,9 +72,23 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales erroneas')
     }
 
-    console.log (user);
-    return user;
+    // console.log (user);
+    console.log (`Usuario: '${user.username}' a iniciado sesion`);
+    
+    return{ 
+      ...user,
+      token: this.getJwtToken({
+        username: user.username
+      })
+    };
     // TODO retornar el JWT de acceso
+  }
+
+  private getJwtToken(payLoad:IJwtPayLoad){
+
+    const token = this.jwtService.sign(payLoad);
+    return token;
+
   }
 
   private handleDBExceptions(error: any):never {
@@ -72,23 +96,7 @@ export class AuthService {
     const msn = `Error: '${error.code}' ==> ${error.detail}`; // Uso de un mensaje personalizado con los datos del objeto error
     throw new BadRequestException(msn)
 
-    // throw new InternalServerErrorException('Ayuda!')
   }
 
 
-  // findAll() {
-  //   return `This action returns all auth`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} auth`;
-  // }
-
-  // update(id: number, updateAuthDto: UpdateUserDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} auth`;
-  // }
 }
