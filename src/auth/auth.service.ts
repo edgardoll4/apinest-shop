@@ -37,11 +37,14 @@ export class AuthService {
 
       await this.userRepository.save(user)
 
+      const token = this.getJwtToken({id: user.id})
       delete user.password; // Eliminar el password para luego enviar el return
+      delete user.id; // Eliminar el id para luego enviar el return
 
       return{ 
         ...user,
-        token: this.getJwtToken({username: user.username})
+        // token: this.getJwtToken({id: user.id})
+        token: token
       };
       // TODO: retornar el JWT de acceso
 
@@ -59,6 +62,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({
       where: { username },
       select: {
+        id: true, //! OJO¡
         username: true,
         password: true
       }
@@ -73,13 +77,16 @@ export class AuthService {
     }
 
     // console.log (user);
-    console.log (`Usuario: '${user.username}' a iniciado sesion`);
+    console.log (`Usuario: '${user.username}' a iniciado sesion`); // muestra en la consula de nestjs 
     
+    const token = this.getJwtToken({id: user.id}); // Genera y guarda el token desde el Id en una constante
+    delete user.password; // Eliminar el password para luego enviar el return
+    delete user.id; // Eliminar el id para luego enviar el return
+
     return{ 
       ...user,
-      token: this.getJwtToken({
-        username: user.username
-      })
+      // token: this.getJwtToken({id: user.id})
+      token: token
     };
     // TODO retornar el JWT de acceso
   }

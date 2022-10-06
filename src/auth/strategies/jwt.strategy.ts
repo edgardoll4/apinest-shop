@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(
         private readonly userRepository: Repository<User>,
 
         configService: ConfigService
-        
+
     ) {
 
         super({
@@ -29,9 +29,9 @@ export class JwtStrategy extends PassportStrategy(
     async validate(payload:IJwtPayLoad): Promise<User> { // Se busca Validar la autentificación del usuario
 
 
-        const { username } = payload;
+        const { id } = payload;
 
-        const user = await this.userRepository.findOneBy({username}); // Se busca si el usuario existe en DB
+        const user = await this.userRepository.findOneBy({id}); // Se busca si el usuario existe en DB
 
         if (!user)
             throw new UnauthorizedException('Token Invalido');
@@ -39,6 +39,8 @@ export class JwtStrategy extends PassportStrategy(
         if (!user.isActive) // Se verifica si esta activo
             throw new UnauthorizedException('Usuario no activo');
 
+        console.log ({user});  // Muestra los datos del usuario en la consola de nestjs
+            
         // Request
         return user ;
     }
