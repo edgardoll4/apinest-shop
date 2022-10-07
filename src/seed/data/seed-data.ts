@@ -41,7 +41,7 @@ export const initialData: SeedData = {
             email: 'test1@test.com',
             fullname: 'nameTest1',
             username: 'userTest1',
-            password: bcrypt.hashSync('asd123',10),
+            password: bcrypt.hashSync('Asd123',10),
             roles: [
                 'super-user',
                 'admin',
@@ -52,7 +52,7 @@ export const initialData: SeedData = {
             email: 'test2@test.com',
             fullname: 'nameTest2',
             username: 'userTest2',
-            password: bcrypt.hashSync('asd123',10),
+            password: bcrypt.hashSync('Asd123',10),
             roles: [
                 'admin'
             ]
@@ -61,7 +61,7 @@ export const initialData: SeedData = {
             email: 'test3@test.com',
             fullname: 'nameTest3',
             username: 'userTest3',
-            password: bcrypt.hashSync('asd123',10),
+            password: bcrypt.hashSync('Asd123',10),
             roles: [
                 'super-user'
             ]
@@ -70,7 +70,7 @@ export const initialData: SeedData = {
             email: 'test4@test.com',
             fullname: 'nameTest4',
             username: 'userTest4',
-            password: bcrypt.hashSync('asd123',10),
+            password: bcrypt.hashSync('Asd123',10),
             roles: [
                 'user'
             ]

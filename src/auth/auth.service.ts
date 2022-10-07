@@ -80,7 +80,7 @@ export class AuthService {
     console.log (`Usuario: '${user.username}' a iniciado sesion`); // muestra en la consula de nestjs 
     
     const token = this.getJwtToken({id: user.id}); // Genera y guarda el token desde el Id en una constante
-    delete user.password; // Eliminar el password para luego enviar el return
+    delete user.password; // Eliminar el mostrar password para luego enviar el return
     delete user.id; // Eliminar el id para luego enviar el return
 
     return{ 
@@ -89,6 +89,16 @@ export class AuthService {
       token: token
     };
     // TODO retornar el JWT de acceso
+  }
+
+  async checkAuthStatus( user: User ){ // Chequea el estado del token y genera un nuevo token del usuario correspondiente
+    delete user.roles; // Evita mostrar los roles para luego enviar el return
+    return{ 
+      ...user,
+      token: this.getJwtToken({id: user.id})
+      // token: token
+    };
+
   }
 
   private getJwtToken(payLoad:IJwtPayLoad){
