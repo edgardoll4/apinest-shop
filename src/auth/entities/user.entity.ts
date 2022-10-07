@@ -1,4 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "../../products/entities";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -53,6 +54,14 @@ export class User {
             .toLowerCase()  // Pasa todas las letras a minuscula
             .trim(); // Limpia los espacios al principio y al final
     }
+
+    // ###################RELACIONES#####################
+
+    @OneToMany(
+        () => Product,
+        (product) => product.user
+    )
+    product: Product
 
    @BeforeUpdate()
    checkFilesBeforeUpdate(){

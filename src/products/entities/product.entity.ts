@@ -1,4 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../../auth/entities";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ProductImagen } from "./";
 
 @Entity({ name: 'products' }) // Se determina el nombre que tendra la tabla
@@ -53,6 +54,16 @@ export class Product {
         eager: true}
     )
     images?: ProductImagen[];
+
+
+    // ###################RELACIONES#####################
+
+    @ManyToOne(
+        () => User,
+        (user) => user.product,
+        {eager: true} // Carga automaticamente los datos desde la relación
+    )
+    user:User;
 
    @BeforeInsert()
    checkSlugInsert(){

@@ -1,13 +1,11 @@
-import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { InjectRepository } from '@nestjs/typeorm'
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Injectable, InternalServerErrorException, Logger, NotFoundException, BadRequestException} from '@nestjs/common';
+import { CreateProductDto, UpdateProductDto } from './dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { DataSource, Repository } from 'typeorm';
-import { BadRequestException } from '@nestjs/common/exceptions';
-import { NotFoundException } from '@nestjs/common';
 import { validate as isUUID} from 'uuid';
 import { ProductImagen, Product} from './entities';
+import { User } from '../auth/entities';
 
 @Injectable()
 export class ProductsService {
@@ -23,7 +21,10 @@ export class ProductsService {
     private readonly dataSource: DataSource
   ){}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(
+    createProductDto: CreateProductDto,
+    user: User
+    ) {
 
     try{
 
@@ -41,7 +42,8 @@ export class ProductsService {
       const {images =[], ...prodctDetails}=createProductDto;
       const product = this.productRepository.create({
         ...prodctDetails,
-        images: images.map(image => this.productImagenRepository.create({url: image})) // permite guardar el arreglo de imagenes en la product-imagen con id del producto
+        images: images.map(image => this.productImagenRepository.create({url: image})), // permite guardar el arreglo de imagenes en la product-imagen con id del producto
+        user // agresa al ususario logeado que crea el producto
       });
       await this.productRepository.save(product);
       return {...product, images};
@@ -112,7 +114,8 @@ export class ProductsService {
     }
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
+  async update(id: string, updateProductDto: UpdateProductDto, user: User
+    ) {
 
     const {images, ...toUpdate} = updateProductDto;
 
@@ -143,7 +146,8 @@ export class ProductsService {
 
         }
 
-        await queryRunner.manager.save(product);
+        product.user = user; //asigna en el campo user el id del usuario logeado que actuliza el producto
+        await queryRunner.manager.save(product); // se guarda la data en la DB
 
         await queryRunner.commitTransaction();
         await queryRunner.release();
