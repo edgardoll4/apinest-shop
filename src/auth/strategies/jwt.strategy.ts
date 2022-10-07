@@ -39,7 +39,7 @@ export class JwtStrategy extends PassportStrategy(
         if (!user.isActive) // Se verifica si esta activo
             throw new UnauthorizedException('Usuario no activo');
 
-        console.log ({user});  // Muestra los datos del usuario en la consola de nestjs
+        // console.log ({user});  // Muestra los datos del usuario en la consola de nestjs
             
         // Request
         return user ;
