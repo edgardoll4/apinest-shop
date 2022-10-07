@@ -59,7 +59,7 @@ export class AuthService {
 
     const { username, password } = loginUserDto;
 
-    const user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({ // guarda el registro de la consulta
       where: { username },
       select: {
         id: true, //! OJO¡
@@ -68,12 +68,12 @@ export class AuthService {
       }
     });
 
-    if(!user){
+    if(!user){ // Comprueba si se encontró un usuario con las credenciales del username
       throw new UnauthorizedException('Credenciales erroneas')
     }
     
-    if(!bcrypt.compareSync(password, user.password)){
-      throw new UnauthorizedException('Credenciales erroneas')
+    if(!bcrypt.compareSync(password, user.password)){ // Compara el password ingresado con el password encriptado guardado en la DB
+      throw new UnauthorizedException('Credenciales erroneas') 
     }
 
     // console.log (user);
@@ -95,7 +95,7 @@ export class AuthService {
     delete user.roles; // Evita mostrar los roles para luego enviar el return
     return{ 
       ...user,
-      token: this.getJwtToken({id: user.id})
+      token: this.getJwtToken({id: user.id}) // Generación de un token nuevo a partir del ID
       // token: token
     };
 
@@ -103,7 +103,7 @@ export class AuthService {
 
   private getJwtToken(payLoad:IJwtPayLoad){
 
-    const token = this.jwtService.sign(payLoad);
+    const token = this.jwtService.sign(payLoad); // Crea un token a partir del parametro enviado
     return token;
 
   }

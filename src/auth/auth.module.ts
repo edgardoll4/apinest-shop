@@ -25,9 +25,9 @@ import { JwtStrategy } from './strategies';
         // console.log('JWT SECRET', process.env.JWT_SECRET)
         return {
           // ignoreExpiration: false,
-          secret: configService.get<string>('SECRET_JWT'),
-          signOptions: {
-            expiresIn:'2h'
+          secret: configService.get<string>('SECRET_JWT'), // Asigna la clave secreta para la generacion del token
+          signOptions: { // Se le asigna varios opciones para la generacion del token
+            expiresIn:'6h' // Se le asigna un tiempo de ser valido el token
           },
         }
       }
