@@ -1,3 +1,7 @@
+import * as bcrypt from 'bcrypt';
+
+
+
 interface SeedProduct {
     description: string;
     images: string[];
@@ -11,16 +15,68 @@ interface SeedProduct {
     gender: 'men'|'women'|'kid'|'unisex'
 }
 
+interface SeedUser {
+    email: string;
+    fullname: string;
+    username: string;
+    password: string;
+    roles: ValidRoles[];
+}
+
 type ValidSizes = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL';
 type ValidTypes = 'shirts'|'pants'|'hoodies'|'hats';
+type ValidRoles = 'admin'|'super-user'|'user'|'dev';
 
 
 interface SeedData {
+    users: SeedUser[];
     products: SeedProduct[];
 }
 
 
 export const initialData: SeedData = {
+
+    users: [
+        {
+            email: 'test1@test.com',
+            fullname: 'nameTest1',
+            username: 'userTest1',
+            password: bcrypt.hashSync('asd123',10),
+            roles: [
+                'super-user',
+                'admin',
+                'dev'
+            ]
+        },
+        {
+            email: 'test2@test.com',
+            fullname: 'nameTest2',
+            username: 'userTest2',
+            password: bcrypt.hashSync('asd123',10),
+            roles: [
+                'admin'
+            ]
+        },
+        {
+            email: 'test3@test.com',
+            fullname: 'nameTest3',
+            username: 'userTest3',
+            password: bcrypt.hashSync('asd123',10),
+            roles: [
+                'super-user'
+            ]
+        },
+        {
+            email: 'test4@test.com',
+            fullname: 'nameTest4',
+            username: 'userTest4',
+            password: bcrypt.hashSync('asd123',10),
+            roles: [
+                'user'
+            ]
+        }
+    ],
+
     products: [
         {
             description: "Introducing the Tesla Chill Collection. The Men’s Chill Crew Neck Sweatshirt has a premium, heavyweight exterior and soft fleece interior for comfort in any season. The sweatshirt features a subtle thermoplastic polyurethane T logo on the chest and a Tesla wordmark below the back collar. Made from 60% cotton and 40% recycled polyester.",
