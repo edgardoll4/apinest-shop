@@ -131,6 +131,7 @@ export class AppService {
             </div></div>
           <p dir="auto">Nest is <a href="/edgardoll4/apinest-shop/blob/master/LICENSE">MIT licensed</a>.</p>
           </article>
+          
         
         </div>
         </body>
