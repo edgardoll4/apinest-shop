@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Headers, SetMetadata } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { IncomingHttpHeaders } from 'http';
@@ -37,7 +37,6 @@ export class AuthController {
     return this.authService.checkAuthStatus(user);
   }
 
-
   @Get('privado')
   @UseGuards( AuthGuard() )
   testingPrivateRouter(
@@ -67,6 +66,7 @@ export class AuthController {
   }
 
   // @SetMetadata('roles',['admin','super-user']) // Permite asignar metadata
+  @ApiBearerAuth()
   @Get('protegido')
   @RoleProtected(IValidRoles.admin) // Uso del decorador personalizado para controlar los roles permitidos
   @UseGuards( AuthGuard(), UserRoleGuard )
@@ -82,6 +82,7 @@ export class AuthController {
 
   }
 
+  @ApiBearerAuth()
   @Get('restringido')
   @Auth(IValidRoles.superUser)
   testingRestringidoRouter(
