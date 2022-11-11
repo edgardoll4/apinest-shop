@@ -33,6 +33,10 @@ import { MessagesWsModule } from './messages-ws/messages-ws.module';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({ // configuracion de la conexion a la DB con las variables de entorno 
+      // ssl:process.env.STAGE === 'prod',
+      // extra: {
+      //   ssl: process.env.STAGE === 'prod' ? { rejectUnauthorized: false } : null,
+      // },
       type: 'postgres',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
