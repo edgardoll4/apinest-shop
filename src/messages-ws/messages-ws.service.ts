@@ -64,7 +64,9 @@ export class MessagesWsService {
         console.log ('imgresa al checkUserConnected');
         for (const clientId of Object.keys(this.connectedClients)) {
             const connectedClient = this.connectedClients[clientId];
-            console.log ('ID: ',connectedClient.socket.id);
+            console.log ('ID cliente encontrado: ',connectedClient.socket.id);
+
+            console.log ('ID cliente a consultar : ', user.id);
 
             if (connectedClient.user.id === user.id) {
                 console.log ('Usuario ya estaba conectado', connectedClient.user.id === user.id);

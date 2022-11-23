@@ -64,17 +64,17 @@ export class MessagesWsGateway implements OnGatewayConnection, OnGatewayDisconne
     //! Emitir al cliente inicial
     payload.contexto='me';
     payload.contextoClient="cliente Inicial";
-    client.emit('message-form-server', payload);
+    client.emit('message-from-server', payload);
 
     //! Emitir a todos los clientes conectados menos al cliente inicial
     payload.contexto='others';
     payload.contextoClient="todos los clientes conectados menos al cliente inicial";
-    client.broadcast.emit('message-form-server', payload);
+    client.broadcast.emit('message-from-server', payload);
 
     // //! Emitir a todos los clientes conectados
     // payload.contexto='all';
     // payload.contextoCliente="todos los clientes conectados";
-    // this.wss.emit('message-form-server', payload);
+    // this.wss.emit('message-from-server', payload);
   }
 
 }
